@@ -9,7 +9,7 @@ defmodule DoomFire do
   @sleep_ms 16
 
   # Higher decay = Smaller flames
-  @decay 4
+  @decay 0..3
 
   @color_pallete {
     IO.ANSI.black_background(),
@@ -52,24 +52,27 @@ defmodule DoomFire do
   }
 
   def light do
-    light(40, 40)
+    light(50)
   end
 
-  def light(height, width) do
+  def light(width) do
     Application.put_env(:elixir, :ansi_enabled, true)
+    {:ok, io_height} = :io.rows()
 
-    list_length = width * height
+    list_length = width * (io_height - 5)
     starting_list = build_initial_fire_list(list_length, width)
 
     recurse_fire_propagation(starting_list, width)
   end
 
   defp build_initial_fire_list(list_length, width) do
+    collor_pallete_length = length(Tuple.to_list(@color_pallete)) - 1
+
     Enum.reduce(1..list_length, [], fn i, acc ->
       # Adds 0 to all of the pixels except the ones on the bottom row.
       # Those have the highest intensity and will serve as the fire starter.
       if i > list_length - width do
-        acc ++ [36]
+        acc ++ [collor_pallete_length]
       else
         acc ++ [0]
       end
@@ -83,7 +86,7 @@ defmodule DoomFire do
         pixel_below_index = i + width
 
         pixel_below = Enum.at(fire_tuple_list, pixel_below_index)
-        decay = Enum.random(0..@decay)
+        decay = Enum.random(@decay)
 
         case pixel_below do
           nil ->
@@ -107,13 +110,11 @@ defmodule DoomFire do
   defp render_fire(fire_list, width) do
     IEx.Helpers.clear()
 
-    fire_list
-    |> Enum.chunk_every(width)
-    |> Enum.map(fn row ->
-      row
-      |> Enum.map(fn {intensity, _index} ->
-        [elem(@color_pallete, intensity), "  "]
-        |> IO.ANSI.format_fragment()
+    columns = Enum.chunk_every(fire_list, width)
+
+    Enum.map(columns, fn row ->
+      Enum.map(row, fn {intensity, _index} ->
+        IO.ANSI.format_fragment([elem(@color_pallete, intensity), "  "])
       end)
       |> IO.puts()
     end)
