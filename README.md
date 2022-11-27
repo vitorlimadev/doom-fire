@@ -1,21 +1,26 @@
 # DoomFire
 
-**TODO: Add description**
+![DOOM Fire gif](./doom-fire.gif)
+
+A functional recursive version of the famous DOOM fire algorithm.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `doom_fire` to your list of dependencies in `mix.exs`:
+You need to have both erlang and elixir installed, the project itself has no dependencies.
 
-```elixir
-def deps do
-  [
-    {:doom_fire, "~> 0.1.0"}
-  ]
-end
+To start, run:
+
+```bash
+iex -S mix
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/doom_fire>.
+```elixir
+DoomFire.light
+```
 
+To have a flame 40 pixels tall and 40 pixels wide (like the gif).
+You can set the flame width and height as params.
+
+```elixir
+DoomFire.light 50, 100 # height, width
+```
