@@ -2,7 +2,7 @@
 
 ![DOOM Fire gif](./doom-fire.gif)
 
-A functional recursive version of the famous DOOM fire algorithm.
+A functional recursive version of the famous DOOM fire graphics algorithm.
 
 ## Installation
 
